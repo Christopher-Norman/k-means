@@ -1,4 +1,5 @@
 source("k-means/KMeansAlgorithm.R")
+library("mnormt") # R package for multivariate normal distribution
 
 # CREATE SYNTHETIC DATA
 set.seed(105)  # Set seed for reproducible results
@@ -22,8 +23,9 @@ points(group4, col="green")
 
 data = rbind(group1, group2, group3, group4)
 
-km = KMeansAlgorithm(x = data, k = 4, iter.max = 10, nstart = 3)  # Create K-Means object
-km$start()
+# Create K-Means object from implementation in KMeansAlgorithm.R
+km = KMeansAlgorithm(x = data, k = 4, iter.max = 20, nstart = 3)  
+km$start()  # Initalise algorithm
 
 test_data = c()
 for (index in 1:400){
@@ -33,9 +35,13 @@ for (index in 1:400){
 }
 points(test_data[,1], test_data[,2])
 
-km.r <- kmeans(data, 4, iter.max = 10)  # K-Means R package to compare
+km.r <- kmeans(data, 4, iter.max = 20)  # K-Means R package to compare
 print(km.r)
 print(km)
 
 print(km$cluster_means)
 print(km.r$centers)
+
+km$results()
+print(km.r$tot.withinss)
+print(km.r$betweenss)
